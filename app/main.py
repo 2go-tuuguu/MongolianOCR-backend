@@ -15,7 +15,7 @@ def allowed_file(filename):
 def predict():
     if request.method == 'POST':
         # try:
-        imageData = io.BytesIO(request.get_data())
+        imageData = request.get_data()
         img = Image.open(imageData)
 
         tensor = transform_image(img)
