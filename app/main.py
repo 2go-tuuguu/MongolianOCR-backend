@@ -10,11 +10,9 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@app.route('/predict', methods=['POST'])
 def predict():
     if request.method == 'POST':
-        print(request)
-        file = request.files.get('file')
+        file = request.get('file')
         if file is None or file.filename == "":
             return jsonify({'error': 'no file'})
         if not allowed_file(file.filename):
