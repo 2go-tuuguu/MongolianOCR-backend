@@ -13,16 +13,16 @@ def allowed_file(filename):
 def predict():
     if request.method == 'POST':
         try:
-            file = open(request.get_data())
-            # if file is None or file.filename == "":
-            #     return jsonify({'error': 'no file'})
-            # if not allowed_file(file.filename):
-            #     return jsonify({'error': 'format not supported'})
+            file = request.get_data()
+            if file is None or file.filename == "":
+                return jsonify({'error': 'no file'})
+            if not allowed_file(file.filename):
+                return jsonify({'error': 'format not supported'})
 
-            # img_bytes = file.read()
-            # tensor = transform_image(img_bytes)
-            # prediction = get_prediction(tensor)
-            # data = {'prediction': prediction.item(), 'class_name': str(prediction.item())}
-            # return jsonify(data)
+            img_bytes = file.read()
+            tensor = transform_image(img_bytes)
+            prediction = get_prediction(tensor)
+            data = {'prediction': prediction.item(), 'class_name': str(prediction.item())}
+            return jsonify(file)
         except:
             return jsonify({'error': 'error during files'})
