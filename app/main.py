@@ -1,3 +1,4 @@
+from crypt import methods
 from flask import Flask, request, jsonify
 
 from app.torch_utils import transform_image, get_prediction
@@ -9,7 +10,7 @@ def allowed_file(filename):
     # xxx.png
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
+@app.route('/predict', methods=['POST'])
 def predict():
     if request.method == 'POST':
         file = request.get('file')
