@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify
+import io
+from PIL import Image
 
 from app.torch_utils import transform_image, get_prediction
 
@@ -13,16 +15,12 @@ def allowed_file(filename):
 def predict():
     if request.method == 'POST':
         try:
-            file = request.get_data()
-            if file is None or file.filename == "":
-                return jsonify({'error': 'no file'})
-            if not allowed_file(file.filename):
-                return jsonify({'error': 'format not supported'})
+            imageData = io.BytesIO(request.get_data())
+            img = Image.open(imageData)
 
-            img_bytes = file.read()
-            tensor = transform_image(img_bytes)
+            tensor = transform_image(img)
             prediction = get_prediction(tensor)
             data = {'prediction': prediction.item(), 'class_name': str(prediction.item())}
-            return jsonify(file)
+            return jsonify(data)
         except:
             return jsonify({'error': 'error during files'})
