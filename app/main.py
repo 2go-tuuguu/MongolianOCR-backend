@@ -16,6 +16,7 @@ def predict():
     if request.method == 'POST':
         # try:
         imageData = request.get_data()
+        return jsonify(imageData)
         img = Image.open(imageData)
 
         tensor = transform_image(img)
