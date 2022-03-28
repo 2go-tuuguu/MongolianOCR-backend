@@ -14,14 +14,12 @@ def allowed_file(filename):
 @app.route('/predict', methods=['POST'])
 def predict():
     if request.method == 'POST':
-        # try:
-        imageData = request.get_data()
-        return jsonify(imageData)
-        img = Image.open(imageData)
+        bytesOfImage = request.get_data()
+        with open('image.jpeg', 'wb') as out:
+            out.write(bytesOfImage)
 
+        img = Image.open('image.jpeg')
         tensor = transform_image(img)
         prediction = get_prediction(tensor)
         data = {'prediction': prediction.item(), 'class_name': str(prediction.item())}
         return jsonify(data)
-        # except:
-        #     return jsonify({'error': 'error during files'})
