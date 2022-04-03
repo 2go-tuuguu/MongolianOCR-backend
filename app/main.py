@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-import io
 from PIL import Image
 
 from app.torch_utils import transform_image, get_prediction
@@ -15,11 +14,8 @@ def allowed_file(filename):
 def predict():
     if request.method == 'POST':
         bytesOfImage = request.get_data()
-        with open('image.jpeg', 'wb') as out:
-            out.write(bytesOfImage)
-
-        img = Image.open('image.jpeg')
-        tensor = transform_image(img)
+        
+        tensor = transform_image(bytesOfImage)
         prediction = get_prediction(tensor)
         data = {'prediction': prediction.item(), 'class_name': str(prediction.item())}
         return jsonify(data)
