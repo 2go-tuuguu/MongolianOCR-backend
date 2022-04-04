@@ -1,7 +1,9 @@
+import re
 from flask import Flask, request, jsonify
 from PIL import Image
 
 from app.torch_utils import transform_image, get_prediction
+from app.ocr import recognize
 
 app = Flask(__name__)
 
@@ -14,8 +16,16 @@ def allowed_file(filename):
 def predict():
     if request.method == 'POST':
         bytesOfImage = request.get_data()
-        
-        tensor = transform_image(bytesOfImage)
-        prediction = get_prediction(tensor)
-        data = {'prediction': prediction.item(), 'class_name': str(prediction.item())}
-        return jsonify(data)
+        with open('image.jpeg', 'wb') as out:
+            out.write(bytesOfImage)
+
+        # tensor = transform_image(bytesOfImage)
+        # prediction = get_prediction(tensor)
+        # data = {'prediction': prediction.item(), 'class_name': str(prediction.item())}
+
+        result, success = recognize('image.jpeg')
+        if success:
+            return {'recognized_text': result,
+                    'message': 'Success' }
+        else:
+            return {'message': "No text was recognized."}
