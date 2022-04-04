@@ -10,7 +10,7 @@ itsdangerous==2.1.2
 Jinja2==3.1.1
 MarkupSafe==2.1.1
 numpy==1.22.3
-opencv-python==4.5.5.64
+opencv-python-headless==4.2.0.32
 torch==1.11.0
 typing_extensions==4.1.1
 urllib3==1.26.9
