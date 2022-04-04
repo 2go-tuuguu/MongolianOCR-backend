@@ -1,8 +1,5 @@
-import re
-from flask import Flask, request, jsonify
-from PIL import Image
+from flask import Flask, request
 
-from app.torch_utils import transform_image, get_prediction
 from app.ocr import recognize
 
 app = Flask(__name__)
