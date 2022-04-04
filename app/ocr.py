@@ -3,11 +3,9 @@
 """OCR on an image containing traditional Mongolian script."""
 __author__ = 'Erdene-Ochir Tuguldur'
 
-from sre_constants import SUCCESS
 import numpy as np
 import cv2
 import torch
-import argparse
 import statistics
 
 from cv2 import IMREAD_GRAYSCALE
