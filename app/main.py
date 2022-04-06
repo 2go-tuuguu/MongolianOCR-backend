@@ -4,6 +4,7 @@ from app.ocr import recognize
 
 app = Flask(__name__)
 
+
 @app.route('/predict', methods=['POST'])
 def predict():
     if request.method == 'POST':
