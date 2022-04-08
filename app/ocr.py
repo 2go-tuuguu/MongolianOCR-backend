@@ -133,7 +133,7 @@ def recognize(image, scanOrNot):
     if len(lines) == 0:
         success = False
     res = []
-    for _, recognized_text in ocr(image, lines, 'image2bichig-epoch-0157.pth', use_gpu=False):
+    for _, recognized_text in ocr(image, lines, 'app/image2bichig-epoch-0157.pth', use_gpu=False):
         res.append(recognized_text)
 
     return '\n'.join(res), success
