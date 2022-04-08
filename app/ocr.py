@@ -7,9 +7,9 @@ import numpy as np
 import cv2
 import torch
 import statistics
-
 from cv2 import IMREAD_GRAYSCALE
 
+from app.utils import scanImage
 from app.crnn import CRNN
 
 
@@ -59,9 +59,7 @@ def line_segmentation(orig_img, dilate_kernel_x=3, dilate_kernel_y=30, aspect_ra
     dilated_img = cv2.dilate(threshed_img, kernel, iterations=1)
 
     # compute and sort contours
-    img_height, img_width = img.shape[:2]
-    contours_result = cv2.findContours(dilated_img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    contours = contours_result[len(contours_result)-2]
+    contours, _ = cv2.findContours(dilated_img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     sorted_contours = sorted(contours, key=lambda ctr: cv2.boundingRect(ctr)[0])
 
     # compute median contour width
@@ -119,7 +117,7 @@ def ocr(orig_img, lines, checkpoint_file_name, use_gpu=False):
 
     return result
 
-def recognize(image):
+def recognize(image, scanOrNot):
     success = True
     # parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     # parser.add_argument("--checkpoint", type=str, required=True, help='checkpoint file to test')
@@ -127,11 +125,15 @@ def recognize(image):
     # args = parser.parse_args()
 
     image = cv2.imread(image, IMREAD_GRAYSCALE)
-    lines = line_segmentation(image)
+    if (scanOrNot):
+        image = scanImage(image)
+    height, _ = image.shape
+    dilation = round(height * 0.08)
+    lines = line_segmentation(image, dilate_kernel_y=dilation)
     if len(lines) == 0:
         success = False
     res = []
-    for _, recognized_text in ocr(image, lines, 'app/image2bichig-epoch-0157.pth', use_gpu=False):
+    for _, recognized_text in ocr(image, lines, 'image2bichig-epoch-0157.pth', use_gpu=False):
         res.append(recognized_text)
 
     return '\n'.join(res), success
